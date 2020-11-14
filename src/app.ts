@@ -6,6 +6,8 @@ import config from "./config/index";
 import { createConnection } from "typeorm";
 import { handleError } from "./helpers/httpError";
 
+import { authRouter } from "../src/routes/index";
+
 dotenv.config();
 
 const app = express();
@@ -21,11 +23,13 @@ async function connectDb() {
   }
 }
 
+app.use("/api/v1/auth", authRouter);
+
 // parse requests of content-type: application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 //app-wide custom error handler
 app.use((err, req, res, next) => {
