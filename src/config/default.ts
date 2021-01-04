@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
+import { conf } from ".";
 
 dotenv.config();
 
-let defaultConfig = {
+let defaultConfig: conf = {
   app: {
     port: process.env.PORT,
+    redisPort: parseInt(process.env.REDIS_PORT as string),
   },
   db: {
     HOST: process.env.MYSQL_HOST,
