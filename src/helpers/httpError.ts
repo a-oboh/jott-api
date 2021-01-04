@@ -1,3 +1,5 @@
+import { Response } from "express";
+
 class HttpError extends Error {
   code: number;
   message: string;
@@ -15,7 +17,7 @@ class HttpError extends Error {
   }
 }
 
-const handleError = (err, res) => {
+const handleError = (err: any, res: Response) => {
   const { statusCode, message } = err;
   res.status(statusCode).json({
     status: "error",
