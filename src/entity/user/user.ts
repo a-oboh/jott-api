@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import bcrypt from "bcrypt";
+import { Note } from "../note/note";
 
 @Entity("users")
 export class User {
@@ -32,6 +34,8 @@ export class User {
 
   @Column()
   resetCode: string;
+
+  @OneToMany((type) => Note, (note) => note.owner) note: Note[];
 
   @CreateDateColumn()
   createdAt: Date;
