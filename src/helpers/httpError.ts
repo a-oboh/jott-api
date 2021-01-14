@@ -1,24 +1,33 @@
 import { Response } from "express";
 
 class HttpError extends Error {
-  code: number;
+  statusCode: number;
   message: string;
 
-  constructor(message: string, code: number = 500, stack = null) {
+  constructor(message: string, statusCode: number = 500, stack = null) {
     super(message);
-    this.code = code;
+
+    this.statusCode = statusCode;
     this.message = message;
+
+    Error.captureStackTrace(this, this.constructor);
+
     // this.stack = stack;
 
-    Error.captureStackTrace(this);
+    // Error.captureStackTrace(this);
 
-    // Set the prototype explicitly.
-    Object.setPrototypeOf(this, HttpError.prototype);
+    // // Set the prototype explicitly.
+    // Object.setPrototypeOf(this, HttpError.prototype);
   }
 }
 
 const handleError = (err: any, res: Response) => {
+  // console.log('erroorrrroorrrr')
+
   const { statusCode, message } = err;
+
+  console.error(err);
+
   res.status(statusCode).json({
     status: "error",
     statusCode,
