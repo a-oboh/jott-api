@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth/authService";
 import { HttpError } from "../helpers/httpError";
+import { User } from "entity/user/user";
 
 export class AuthController {
   //   private userRepository = getRepository(User);
@@ -14,12 +15,25 @@ export class AuthController {
 
   async register(req: Request, res: Response) {
     if (!req.body) {
-      throw new HttpError("request body cannot be empty", 400);
+      return res.status(400).json({
+        status: "error",
+        statusCode: 400,
+        message: "body empty",
+      });
+      // console.log("body empty");
+      // throw new HttpError("request body cannot be empty", 400);
     }
+
+    let newUser = new User();
+
+    newUser.email = req.body.email;
+    newUser.firstName = req.body.firstName;
+    newUser.lastName = req.body.lastName;
+    newUser.password = req.body.password;
 
     try {
       let authService = new AuthService();
-      const user = await authService.register(req.body);
+      const user = await authService.register(newUser);
 
       return res.send({
         status: "success",
@@ -28,7 +42,7 @@ export class AuthController {
       });
     } catch (err) {
       if (err instanceof HttpError) {
-        return res.status(err.code).send({
+        return res.status(err.statusCode).send({
           status: "error",
           message: err.message || `error registering new user`,
         });
@@ -42,11 +56,11 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     if (!req.body) {
-      //   return res.status(400).send({
-      //     status: "error",
-      //     message: "request body cannot be empty",
-      //   });
-      throw new HttpError("request body cannot be empty", 400);
+        return res.status(400).send({
+          status: "error",
+          message: "request body cannot be empty",
+        });
+      // throw new HttpError("request body cannot be empty", 400);
     }
 
     const { email, password } = req.body;
@@ -62,7 +76,7 @@ export class AuthController {
       });
     } catch (err) {
       if (err instanceof HttpError) {
-        return res.status(err.code).send({
+        return res.status(err.statusCode).send({
           status: "error",
           message: err.message || `error while trying to login user`,
         });
