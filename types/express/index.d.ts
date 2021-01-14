@@ -9,12 +9,24 @@ import { Response } from "express-serve-static-core";
 //   }
 // }
 
+interface UserEntity {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  confirmationToken?: string;
+  resetCode?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
 declare module "express-serve-static-core" {
   export interface Request {
-    user?: object;
+    user?: UserEntity;
   }
 
   export interface Response {
-    user?: object;
+    user?: {};
   }
 }
