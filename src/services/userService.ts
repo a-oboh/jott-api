@@ -1,16 +1,36 @@
-import { getRepository } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import { User } from "../entity/user/user";
 import { HttpError } from "../helpers/httpError";
 
 export class UserService {
+  constructor() {
+    // this.userRepository = getRepository(User);
+  }
+
+  // private userRepository: Repository<User>;
+
+  async getUserById(id: string) {
+    let userRepository = getRepository(User);
+
+    const user = userRepository.findOne(id);
+
+    if (!user) {
+      throw new HttpError(`User with id: ${id} not found`, 404);
+    }
+
+    return user;
+  }
+
   async getUserByEmail(email: string) {
     let userRepository = getRepository(User);
 
     const user = await userRepository.findOne({ email });
+
     if (user) {
       return user;
     }
-    throw new HttpError(`User with email: ${email} does not exist`, 404);
+
+    throw new HttpError(`User with email: ${email} not found`, 404);
   }
 
   async createUser(data: User) {
