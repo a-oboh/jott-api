@@ -14,7 +14,7 @@ export class AuthService {
   private userService: UserService = new UserService();
 
   createToken(payload: Payload) {
-    return jwt.sign(payload, process.env.JWT_SECRET, {
+    return jwt.sign(payload, process.env.JWT_SECRET as jwt.Secret, {
       // expiresIn: "3 days",
       subject: payload.id,
     });
@@ -46,7 +46,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const user = await this.userService.getUserByEmail(email);
-
+    
     if (user) {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -61,7 +61,7 @@ export class AuthService {
 
         return { user, access_token: token };
       } else {
-        throw new HttpError("wrong credentials provided", 500);
+        throw new HttpError("wrong credentials provided", 400);
       }
     } else {
       throw new HttpError("wrong credentials provided", 500);
