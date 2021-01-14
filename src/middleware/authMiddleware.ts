@@ -1,3 +1,4 @@
+import { User } from "entity/user/user";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -15,7 +16,7 @@ export const requireAuth = (
   }
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded: User) => {
       if (err) {
         return res.status(401).json({
           status: "error",
