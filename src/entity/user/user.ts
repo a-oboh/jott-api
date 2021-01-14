@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -29,13 +30,22 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({default: ''})
   confirmationToken: string;
 
-  @Column()
+  @Column({default: ''})
   resetCode: string;
 
   @OneToMany((type) => Note, (note) => note.owner) note: Note[];
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async comparePassword(attempt: string): Promise<boolean> {
+    return await bcrypt.compare(attempt, this.password);
+  }
 
   @CreateDateColumn()
   createdAt: Date;
