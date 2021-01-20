@@ -16,7 +16,7 @@ export class NoteService {
     const note = await noteRepo.findOne(id);
 
     if (!note) {
-      throw new HttpError(`note with id${id} not found`, 404);
+      throw new HttpError(`note with id ${id} not found`, 404);
     }
 
     return note;
@@ -34,12 +34,12 @@ export class NoteService {
     throw new HttpError(`note does not exist`, 404);
   }
 
-  async getNoteByOwner(user: User) {
+  async getNotesByOwner(user: User) {
     let noteRepo = getRepository(Note);
 
-    const note = await noteRepo.find({ owner: user });
+    const notes = await noteRepo.find({ owner: user });
 
-    return note;
+    return notes;
   }
 
   async createNote(data: Note) {
