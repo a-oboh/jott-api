@@ -6,7 +6,7 @@ export const noteRouter = Router();
 
 const noteCtrl = new NoteController();
 
-noteRouter.get("/get-notes", requireAuth, noteCtrl.createNote);
+noteRouter.get("/get-notes/:userId", requireAuth, noteCtrl.getNotes);
 
 noteRouter.post("/create-note", requireAuth, noteCtrl.createNote);
 
