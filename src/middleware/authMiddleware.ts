@@ -10,12 +10,12 @@ export const requireAuth = (
   let token = (req.headers["x-access-token"] ||
     req.headers["authorization"]) as string;
 
-  if (token.startsWith("Bearer ")) {
-    // Remove `Bearer` from string
-    token = token.slice(7, token.length).trimLeft();
-  }
-
   if (token) {
+    if (token.startsWith("Bearer ")) {
+      // Remove `Bearer` from string
+      token = token.slice(7, token.length).trimLeft();
+    }
+
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded: User) => {
       if (err) {
         return res.status(401).json({
@@ -26,6 +26,11 @@ export const requireAuth = (
         req.user = decoded;
         next();
       }
+    });
+  } else {
+    return res.status(401).json({
+      status: "error",
+      message: "Check access token",
     });
   }
 };
