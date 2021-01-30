@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { requireAuth } from "middleware/authMiddleware";
+import checkIdempotentKey from "middleware/idempotencyMiddleware";
 import { NoteController } from "../controllers/noteController";
 
 export const noteRouter = Router();
@@ -8,9 +9,11 @@ const noteCtrl = new NoteController();
 
 noteRouter.get("/get-notes/:userId", requireAuth, noteCtrl.getNotes);
 
-noteRouter.post("/create-note", requireAuth, noteCtrl.createNote);
+noteRouter.get("/get-note/:userId/:noteId", requireAuth, noteCtrl.getSingleNote);
 
-noteRouter.patch("/update-note/:id", requireAuth, noteCtrl.updateNote);
+noteRouter.post("/create-note", requireAuth, checkIdempotentKey, noteCtrl.createNote);
+
+noteRouter.patch("/update-note/:id", requireAuth, checkIdempotentKey, noteCtrl.updateNote);
 
 // noteRouter.get("/get/:id", authCtrl.getOne);
 
