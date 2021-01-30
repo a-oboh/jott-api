@@ -27,9 +27,8 @@ export class RedisService {
     return result;
   }
 
-  getValue(key: string) {
-    const value = this.getAsync(key);
-
+  async getValue(key: string) {
+    const value = await this.getAsync(key);
     return value;
   }
 }

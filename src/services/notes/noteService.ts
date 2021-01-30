@@ -6,7 +6,10 @@ import { HttpError } from "../../helpers/httpError";
 export class NoteService {
   constructor() {
     // this.noteRepo = getRepository(Note);
+    this.noteRepo = getRepository(Note);
   }
+
+  noteRepo: Repository<Note>;
 
   // private noteRepo: Repository<Note>;
 
@@ -32,6 +35,22 @@ export class NoteService {
     }
 
     throw new HttpError(`note does not exist`, 404);
+  }
+
+  async getSingleNote(user: User, noteId: string) {
+    let noteRepo = getRepository(Note);
+
+    try {
+      if (!noteId) {
+        throw new HttpError("no note id", 500);
+      }
+
+      const note = await noteRepo.findOneOrFail({ id: noteId, owner: user });
+
+      return note;
+    } catch (err) {
+      throw new HttpError(err, 500);
+    }
   }
 
   async getNotesByOwner(user: User) {

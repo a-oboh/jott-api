@@ -20,8 +20,6 @@ export class AuthController {
         statusCode: 400,
         message: "body empty",
       });
-      // console.log("body empty");
-      // throw new HttpError("request body cannot be empty", 400);
     }
 
     let newUser = new User();
@@ -60,7 +58,6 @@ export class AuthController {
           status: "error",
           message: "request body cannot be empty",
         });
-      // throw new HttpError("request body cannot be empty", 400);
     }
 
     const { email, password } = req.body;
