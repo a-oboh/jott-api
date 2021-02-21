@@ -9,7 +9,7 @@ export class UserService {
 
   // private userRepository: Repository<User>;
 
-  async getUserById(id: string) {
+  getUserById = (id: string) => {
     let userRepository = getRepository(User);
 
     const user = userRepository.findOne(id);
@@ -19,9 +19,9 @@ export class UserService {
     }
 
     return user;
-  }
+  };
 
-  async getUserByEmail(email: string) {
+  getUserByEmail = async (email: string) => {
     let userRepository = getRepository(User);
 
     const user = await userRepository.findOne({ email });
@@ -31,9 +31,9 @@ export class UserService {
     }
 
     throw new HttpError(`User with email: ${email} not found`, 404);
-  }
+  };
 
-  async createUser(data: User) {
+  createUser = async (data: User) => {
     let userRepository = getRepository(User);
 
     try {
@@ -47,5 +47,5 @@ export class UserService {
     } catch (err) {
       throw new HttpError(err.message, 500);
     }
-  }
+  };
 }

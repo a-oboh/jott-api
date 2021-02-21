@@ -6,14 +6,18 @@ import { HttpError } from "../../helpers/httpError";
 export class NoteService {
   constructor() {
     // this.noteRepo = getRepository(Note);
-    this.noteRepo = getRepository(Note);
+    this.init;
   }
+
+  init = async () => {
+    this.noteRepo = await getRepository(Note);
+  };
 
   noteRepo: Repository<Note>;
 
   // private noteRepo: Repository<Note>;
 
-  private async findNoteById(id: string) {
+  private findNoteById = async (id: string) => {
     let noteRepo = getRepository(Note);
 
     const note = await noteRepo.findOne(id);
@@ -23,9 +27,9 @@ export class NoteService {
     }
 
     return note;
-  }
+  };
 
-  async getNoteById(id: string) {
+  getNoteById = async (id: string) => {
     // let noteRepo = getRepository(Note);
 
     const note = await this.findNoteById(id);
@@ -35,9 +39,9 @@ export class NoteService {
     }
 
     throw new HttpError(`note does not exist`, 404);
-  }
+  };
 
-  async getSingleNote(user: User, noteId: string) {
+  getSingleNote = async (user: User, noteId: string) => {
     let noteRepo = getRepository(Note);
 
     try {
@@ -51,17 +55,17 @@ export class NoteService {
     } catch (err) {
       throw new HttpError(err, 500);
     }
-  }
+  };
 
-  async getNotesByOwner(user: User) {
+  getNotesByOwner = async (user: User) => {
     let noteRepo = getRepository(Note);
 
     const notes = await noteRepo.find({ owner: user });
 
     return notes;
-  }
+  };
 
-  async createNote(data: Note) {
+  createNote = async (data: Note) => {
     let noteRepo = getRepository(Note);
 
     try {
@@ -73,9 +77,9 @@ export class NoteService {
     } catch (e) {
       throw new HttpError(e.message, 500);
     }
-  }
+  };
 
-  async updateNote(data: Note) {
+  updateNote = async (data: Note) => {
     let noteRepo = getRepository(Note);
 
     try {
@@ -85,19 +89,19 @@ export class NoteService {
     } catch (e) {
       throw new HttpError(e.message, 500);
     }
-  }
+  };
 
-  async softDeleteNote(id: string) {
+  deleteNote = (id: string) => {
     let noteRepo = getRepository(Note);
     // const noteToRemove = await this.findNoteById(id);
 
     return noteRepo.softDelete(id);
-  }
+  };
 
-  async restoreNote(id: string) {
+  restoreNote = (id: string) => {
     let noteRepo = getRepository(Note);
     // const noteToRestore = await this.findNoteById(id);
 
     return noteRepo.restore(id);
-  }
+  };
 }
