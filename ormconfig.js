@@ -16,12 +16,12 @@ const devConfig = {
   ...connectionConfig,
   synchronize: true,
   logging: false,
-  entities: ["src/entity/**/*.{ts, js}"],
-  migrations: ["src/migration/**/*.ts"],
+  entities: ["src/entity/**/*.ts"],
+  migrations: ["src/migrations/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],
   cli: {
     entitiesDir: "src/entity",
-    migrationsDir: "src/migration",
+    migrationsDir: "src/migrations",
     subscribersDir: "src/subscriber",
   },
 };
@@ -31,11 +31,11 @@ const prodConfig = {
   synchronize: true,
   logging: false,
   entities: ["dist/entity/**/*.js"],
-  migrations: ["dist/migration/**/*.js"],
+  migrations: ["dist/migrations/**/*.js"],
   subscribers: ["dist/subscriber/**/*.js"],
   cli: {
     entitiesDir: "dist/entity",
-    migrationsDir: "dist/migration",
+    migrationsDir: "dist/migrations",
     subscribersDir: "dist/subscriber",
   },
 };
