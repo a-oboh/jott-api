@@ -1,6 +1,6 @@
-import { User } from "entity/user/user";
+import { User } from "entity/user";
 import { getRepository, Repository } from "typeorm";
-import { Note } from "../../entity/note/note";
+import { Note } from "../../entity/note";
 import { HttpError } from "../../helpers/httpError";
 
 export class NoteService {

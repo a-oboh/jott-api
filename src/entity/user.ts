@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import bcrypt from "bcrypt";
-import { Note } from "../note/note";
+import { Note } from "./note";
 
 @Entity("users")
 export class User {

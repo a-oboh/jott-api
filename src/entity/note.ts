@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { User } from "../user/user";
+import { User } from "./user";
 
 @Entity("notes")
 export class Note {

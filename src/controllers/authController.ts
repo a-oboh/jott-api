@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth/authService";
 import { HttpError } from "../helpers/httpError";
-import { User } from "entity/user/user";
+import { User } from "entity/user";
 
 export class AuthController {
   //   private userRepository = getRepository(User);

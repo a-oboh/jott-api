@@ -1,7 +1,7 @@
 import { Container } from "services/serviceContainer";
 import { ContainerBuilder } from "node-dependency-injection";
 import { getRepository } from "typeorm";
-import { User } from "entity/user/user";
+import { User } from "entity/user";
 import { UserService } from "services/userService";
 
 const createContainer = async () => {

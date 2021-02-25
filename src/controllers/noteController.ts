@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Note } from "../entity/note/note";
+import { Note } from "../entity/note";
 import { HttpError } from "../helpers/httpError";
 import { UserService } from "../services/userService";
 import { NoteService } from "../services/notes/noteService";
@@ -8,7 +8,7 @@ import { cacheRequest } from "helpers/cache";
 import paginate from "helpers/paginate";
 import { ContainerBuilder } from "node-dependency-injection";
 import { Repository } from "typeorm";
-import { User } from "entity/user/user";
+import { User } from "entity/user";
 
 export class NoteController {
   userService: UserService = new UserService();

@@ -1,6 +1,6 @@
 import { UserService } from "../userService";
 import jwt from "jsonwebtoken";
-import { User } from "../../entity/user/user";
+import { User } from "../../entity/user";
 import { HttpError } from "../../helpers/httpError";
 import * as bcrypt from "bcrypt";
 
