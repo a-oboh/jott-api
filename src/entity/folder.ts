@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -14,14 +15,14 @@ import { Note } from "./note";
 import { User } from "./user";
 
 @Entity("folders")
-export class Folder {
+export class Folder extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column("varchar", {length: 255})
   name: string;
 
-  @Column()
+  @Column("varchar")
   description: string;
 
   @OneToMany(() => Note, (note) => note.folder) notes: Note[];

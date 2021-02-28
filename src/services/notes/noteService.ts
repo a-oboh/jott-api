@@ -6,7 +6,7 @@ import { HttpError } from "../../helpers/httpError";
 export class NoteService {
   constructor() {
     // this.noteRepo = getRepository(Note);
-    this.init();
+    // this.init();
   }
 
   private init = async () => {

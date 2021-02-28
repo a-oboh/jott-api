@@ -4,19 +4,16 @@ import { HttpError } from "helpers/httpError";
 import { getRepository, Repository } from "typeorm";
 
 export class FolderService {
-  constructor() {
-    this.init();
-  }
+  // constructor() {
+  //   this.init();
+  // }
 
   private folderRepo: Repository<Folder>;
 
-  private init = async () => {
-    this.folderRepo = await getRepository(Folder);
-  };
-
   private findFolderById = async (id: string) => {
     try {
-      const folder = await this.folderRepo.findOne(id);
+      const folderRepo = await getRepository(Folder);
+      const folder = await folderRepo.findOne(id);
 
       if (!folder) {
         throw new HttpError(`folder with id ${id} not found`, 404);
@@ -28,15 +25,16 @@ export class FolderService {
     }
   };
 
-  getFolderById = async (id: string) => {
+  getFolderById = async (id: string): Promise<Folder> => {
     const folder = await this.findFolderById(id);
 
     return folder;
   };
 
-  getFolderByOwner = (owner: User) => {
+  getFolderByOwner = async (owner: User): Promise<Folder[]> => {
     try {
-      const folders = this.folderRepo.find({ owner });
+      const folderRepo = await getRepository(Folder);
+      const folders = folderRepo.find({ owner });
 
       if (!folders) {
         throw new HttpError(`note for user ${owner.id} not found`, 404);
@@ -48,9 +46,10 @@ export class FolderService {
     }
   };
 
-  createFolder = async (data: Folder) => {
+  createFolder = async (data: Folder): Promise<Folder> => {
     try {
-      const folders = this.folderRepo.create(data);
+      const folderRepo = await getRepository(Folder);
+      const folders = folderRepo.create(data);
 
       const newFolder = this.folderRepo.save(folders);
 
@@ -60,9 +59,10 @@ export class FolderService {
     }
   };
 
-  updateFolder = async (data: Folder) => {
+  updateFolder = async (data: Folder): Promise<Folder> => {
     try {
-      const newFolder = this.folderRepo.save(data);
+      const folderRepo = await getRepository(Folder);
+      const newFolder = folderRepo.save(data);
 
       return (newFolder as unknown) as Folder;
     } catch (e) {
@@ -72,13 +72,15 @@ export class FolderService {
 
   deleteNote = (id: string) => {
     // const noteToRemove = await this.findNoteById(id);
+    const folderRepo = getRepository(Folder);
 
-    return this.folderRepo.softDelete(id);
+    return folderRepo.softDelete(id);
   };
 
   restoreNote = (id: string) => {
     // const noteToRestore = await this.findNoteById(id);
+    const folderRepo = getRepository(Folder);
 
-    return this.folderRepo.restore(id);
+    return folderRepo.restore(id);
   };
 }
