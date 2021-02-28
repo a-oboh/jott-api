@@ -23,8 +23,8 @@ const REDIS_PORT = config.app.redisPort || 6379;
 
 async function connectDb() {
   try {
-    const conn = await createConnection();
-    await conn.runMigrations();
+    await createConnection().then(async (conn) => await conn.runMigrations());
+    // await conn.runMigrations();
     console.log("Database connected");
   } catch (error) {
     console.log(error);

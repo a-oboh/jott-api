@@ -10,21 +10,21 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Folder } from "./folder";
+import { Note } from "./note";
 import { User } from "./user";
 
-@Entity("notes")
-export class Note {
+@Entity("folders")
+export class Folder {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
-  title: string;
+  name: string;
 
   @Column()
-  content: string;
+  description: string;
 
-  @ManyToOne(() => Folder, (folder) => folder.notes) folder: Folder;
+  @OneToMany(() => Note, (note) => note.folder) notes: Note[];
 
   @ManyToOne(() => User, (user) => user.notes) owner: User;
 

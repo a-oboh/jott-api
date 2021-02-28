@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import bcrypt from "bcrypt";
 import { Note } from "./note";
+import { Folder } from "./folder";
 
 @Entity("users")
 export class User {
@@ -30,13 +31,15 @@ export class User {
   @Column()
   password: string;
 
-  @Column({default: ''})
+  @Column({ default: "" })
   confirmationToken: string;
 
-  @Column({default: ''})
+  @Column({ default: "" })
   resetCode: string;
 
-  @OneToMany((type) => Note, (note) => note.owner) note: Note[];
+  @OneToMany(() => Note, (note) => note.owner) notes: Note[];
+
+  @OneToMany(() => Folder, (folder) => folder.owner) folders: Folder[];
 
   @BeforeInsert()
   async hashPassword() {
