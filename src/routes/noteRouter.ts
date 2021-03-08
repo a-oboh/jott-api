@@ -15,4 +15,4 @@ noteRouter.post("/create-note", requireAuth, checkIdempotentKey, noteCtrl.create
 
 noteRouter.patch("/update-note/:id", requireAuth, checkIdempotentKey, noteCtrl.updateNote);
 
-noteRouter.delete("/delete-note/:id", requireAuth, noteCtrl.deleteSingleNote);
+noteRouter.delete("/delete-note/:noteId", requireAuth, noteCtrl.deleteSingleNote);
