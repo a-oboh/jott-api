@@ -14,6 +14,7 @@ import { createConnection } from "typeorm";
 import { handleError, HttpError } from "./helpers/httpError";
 
 import { authRouter, noteRouter } from "../src/routes/index";
+import { expressLogger, logger } from "helpers/logger";
 
 dotenv.config();
 
@@ -60,7 +61,8 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+  logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`)
+  // console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
 
 export { redisClient, app };

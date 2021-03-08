@@ -1,10 +1,11 @@
 import { Response } from "express";
+import { logger } from "./logger";
 
 class HttpError extends Error {
   statusCode: number;
   message: string;
 
-  constructor(message: string, statusCode: number = 500, stack = null) {
+  constructor(message: string, statusCode = 500, stack = null) {
     super(message);
 
     this.statusCode = statusCode;
@@ -22,11 +23,9 @@ class HttpError extends Error {
 }
 
 const handleError = (err: any, res: Response) => {
-  // console.log('erroorrrroorrrr')
+  const { statusCode = 500, message } = err;
 
-  const { statusCode, message } = err;
-
-  console.error(err);
+  logger.error(message);
 
   res.status(statusCode).json({
     status: "error",
