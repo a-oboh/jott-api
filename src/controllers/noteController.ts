@@ -3,12 +3,10 @@ import { Note } from "../entity/note";
 import { HttpError } from "../helpers/httpError";
 import { UserService } from "../services/userService";
 import { NoteService } from "../services/notes/noteService";
-import { RedisService } from "../services/redis/redisServices";
+import { RedisService } from "../services/redis/redisService";
 import { cacheRequest } from "helpers/cache";
 import paginate from "helpers/paginate";
-import { ContainerBuilder } from "node-dependency-injection";
-import { Repository } from "typeorm";
-import { User } from "entity/user";
+import { logger } from "helpers/logger";
 
 export class NoteController {
   userService: UserService = new UserService();
@@ -16,10 +14,6 @@ export class NoteController {
   redisService: RedisService = new RedisService();
 
   getNotes = async (req: Request, res: Response, next: NextFunction) => {
-    // const userService = new UserService();
-    // const noteService = new NoteService();
-    // const redisService = new RedisService();
-
     try {
       const userId = req.params.userId;
 
@@ -48,10 +42,6 @@ export class NoteController {
   };
 
   getSingleNote = async (req: Request, res: Response, next: NextFunction) => {
-    // const userService = new UserService();
-    // const noteService = new NoteService();
-    // const redisService = new RedisService();
-
     try {
       const { userId, noteId } = req.params;
 
@@ -63,7 +53,7 @@ export class NoteController {
         return res.send({
           status: "success",
           message: "note retrieved successfully",
-          data: result.data,
+          data: result,
         });
       }
 
@@ -71,17 +61,15 @@ export class NoteController {
 
       const note = await this.noteService.getSingleNote(user, noteId);
 
-      await cacheRequest(
-        `note_${note.id}`,
-        JSON.stringify({ data: note }),
-        600
-      );
-
-      return res.json({
+      const response = {
         status: "success",
         message: "note retrieved successfully",
         data: note,
-      });
+      };
+
+      await cacheRequest(`note_${note.id}`, JSON.stringify(note), 600);
+
+      return res.json(response);
     } catch (err) {
       return next(err);
     }
@@ -91,10 +79,6 @@ export class NoteController {
     if (!req.body) {
       return next(new HttpError("request body cannot be empty", 400));
     }
-
-    // const userService = new UserService();
-    // let noteService = new NoteService();
-    // const redisService = new RedisService();
 
     try {
       const idempotentKey = req.headers["x-idempotent-key"];
@@ -110,7 +94,7 @@ export class NoteController {
         idempotentKey.toString()
       );
 
-      var obj = JSON.parse(resSaved);
+      const obj = JSON.parse(resSaved);
 
       if (resSaved) {
         return res.status(304).json({
@@ -144,7 +128,7 @@ export class NoteController {
       //store idempotent key and response in cache
       await cacheRequest(idempotentKey.toString(), JSON.stringify(response));
 
-      await cacheRequest(`note_${newNote.id}`, JSON.stringify(response), 600);
+      await cacheRequest(`note_${newNote.id}`, JSON.stringify(response), 60000);
 
       return res.status(201).json(response);
     } catch (err) {
@@ -158,9 +142,6 @@ export class NoteController {
     }
 
     try {
-      // let redisService = new RedisService();
-      // let noteService = new NoteService();
-
       const idempotentKey = req.headers["x-idempotent-key"];
 
       //check if data is cached
@@ -168,7 +149,7 @@ export class NoteController {
         idempotentKey.toString()
       );
 
-      var obj = JSON.parse(resSaved);
+      const obj = JSON.parse(resSaved);
 
       if (resSaved) {
         return res.status(304).json({
@@ -202,7 +183,7 @@ export class NoteController {
       await cacheRequest(
         `note_${updatedNote.id}`,
         JSON.stringify(response),
-        600
+        60000
       );
 
       return res.status(200).json(response);
@@ -217,9 +198,11 @@ export class NoteController {
     next: NextFunction
   ) => {
     try {
-      const { userId, noteId } = req.params;
+      const { noteId } = req.params;
 
-      this.noteService.deleteNote(noteId);
+      await this.noteService.deleteNote(noteId);
+
+      await this.redisService.deleteKey(`note_${noteId}`);
 
       res.send({
         status: "success",

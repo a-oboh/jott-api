@@ -4,18 +4,11 @@ import { Note } from "../../entity/note";
 import { HttpError } from "../../helpers/httpError";
 
 export class NoteService {
-  constructor() {
-    // this.noteRepo = getRepository(Note);
-    // this.init();
-  }
-
-  private init = async () => {
-    this.noteRepo = await getRepository(Note);
-  };
+  // constructor(noteRepo: Repository<Note>) {
+  //   this.noteRepo = noteRepo;
+  // }
 
   private noteRepo: Repository<Note>;
-
-  // private noteRepo: Repository<Note>;
 
   private findNoteById = async (id: string) => {
     const noteRepo = getRepository(Note);
@@ -100,16 +93,24 @@ export class NoteService {
   };
 
   deleteNote = (id: string) => {
-    const noteRepo = getRepository(Note);
-    // const noteToRemove = await this.findNoteById(id);
+    try {
+      const noteRepo = getRepository(Note);
+      // const noteToRemove = await this.findNoteById(id);
 
-    return noteRepo.softDelete(id);
+      return noteRepo.softDelete(id);
+    } catch (e) {
+      throw new HttpError(e, 500);
+    }
   };
 
   restoreNote = (id: string) => {
-    const noteRepo = getRepository(Note);
-    // const noteToRestore = await this.findNoteById(id);
+    try {
+      const noteRepo = getRepository(Note);
+      // const noteToRestore = await this.findNoteById(id);
 
-    return noteRepo.restore(id);
+      return noteRepo.restore(id);
+    } catch (e) {
+      throw new HttpError(e, 500);
+    }
   };
 }
