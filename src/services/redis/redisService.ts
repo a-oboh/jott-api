@@ -1,12 +1,11 @@
-import { promisifyAll } from "bluebird";
-const { promisify } = require("util");
+import { HttpError } from "helpers/httpError";
 import redis from "redis";
 import { currentConfig as config } from "../../config/index";
+import { promisify } from "util";
+import { logger } from "helpers/logger";
 // import { redisClient } from "../../app";
 
 export class RedisService {
-  constructor() {}
-
   REDIS_PORT = config.app.redisPort || 6379;
 
   redisClient = redis.createClient({ port: this.REDIS_PORT });
@@ -14,6 +13,7 @@ export class RedisService {
   private setAsync = promisify(this.redisClient.set).bind(this.redisClient);
   private setExAsync = promisify(this.redisClient.setex).bind(this.redisClient);
   private getAsync = promisify(this.redisClient.get).bind(this.redisClient);
+  private deleteAsync = promisify(this.redisClient.del).bind(this.redisClient);
 
   async setValue(key: string, val: string) {
     // promisifyAll(client);
@@ -30,5 +30,17 @@ export class RedisService {
   async getValue(key: string) {
     const value = await this.getAsync(key);
     return value;
+  }
+
+  async deleteKey(key: string) {
+    try {
+      const value = await this.deleteAsync(key);
+
+      logger.debug(value);
+
+      return value;
+    } catch (e) {
+      throw new HttpError(e);
+    }
   }
 }
