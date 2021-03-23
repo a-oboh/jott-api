@@ -4,13 +4,17 @@ import testConfig from "./test";
 import prodConfig from "./prod";
 
 interface conf {
-  app: { port?: string };
+  app: {
+    port?: string;
+    redisPort?: number;
+    redisHost?: string;
+  };
   db: {
-    HOST: string;
+    HOST?: string;
     USER?: string;
     PASSWORD?: string;
     PORT?: string;
-    DB: string;
+    DB?: string;
   };
 }
 
@@ -27,4 +31,4 @@ function getConfig(): conf {
 
 let currentConfig: conf = getConfig();
 
-export default currentConfig;
+export { currentConfig, conf };
