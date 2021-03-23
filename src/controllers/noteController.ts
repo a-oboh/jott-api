@@ -67,7 +67,7 @@ export class NoteController {
         data: note,
       };
 
-      await cacheRequest(`note_${note.id}`, JSON.stringify(note), 600);
+      await cacheRequest(`note_${note.id}`, JSON.stringify(note), 3600);
 
       return res.json(response);
     } catch (err) {
@@ -128,7 +128,7 @@ export class NoteController {
       //store idempotent key and response in cache
       await cacheRequest(idempotentKey.toString(), JSON.stringify(response));
 
-      await cacheRequest(`note_${newNote.id}`, JSON.stringify(response), 60000);
+      await cacheRequest(`note_${newNote.id}`, JSON.stringify(response), 3600);
 
       return res.status(201).json(response);
     } catch (err) {

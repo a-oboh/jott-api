@@ -2,8 +2,8 @@ import { HttpError } from "./httpError";
 
 export default function paginate(data: [], page: string, limit: string) {
   try {
-    let pageNum = parseInt(page.toString());
-    let limitNum = parseInt(limit.toString());
+    const pageNum = parseInt(page.toString());
+    const limitNum = parseInt(limit.toString());
 
     let nextPage: number;
     let previousPage: number;
@@ -24,7 +24,7 @@ export default function paginate(data: [], page: string, limit: string) {
       previousPage = pageNum - 1;
     }
 
-    let paginatedData: data = {
+    const paginatedData: data = {
       result: result as [],
       nextPage,
       previousPage,

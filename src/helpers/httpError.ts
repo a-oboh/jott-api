@@ -25,7 +25,8 @@ class HttpError extends Error {
 const handleError = (err: any, res: Response) => {
   const { statusCode = 500, message } = err;
 
-  logger.error(message);
+  // logger.error(message);
+  logger.error(err);
 
   res.status(statusCode).json({
     status: "error",
