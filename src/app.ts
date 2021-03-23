@@ -13,7 +13,7 @@ import { currentConfig as config } from "./config/index";
 import { createConnection } from "typeorm";
 import { handleError, HttpError } from "./helpers/httpError";
 
-import { authRouter, noteRouter } from "../src/routes/index";
+import { authRouter, noteRouter, folderRouter } from "../src/routes/index";
 import { expressLogger, logger } from "helpers/logger";
 
 dotenv.config();
@@ -26,9 +26,9 @@ async function connectDb() {
   try {
     await createConnection().then(async (conn) => await conn.runMigrations());
     // await conn.runMigrations();
-    console.log("Database connected");
+    logger.debug("Database connected");
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -39,10 +39,10 @@ const redisClient = redis.createClient({ port: REDIS_PORT });
 connectDb();
 
 // parse requests of content-type: application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) =>
   res.send("<h1>q-note v1.0 🤙🏽 🤙🏽</h1>")
@@ -54,6 +54,7 @@ app.get("/api/v1/error", (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/note", noteRouter);
+app.use("/api/v1/folder", folderRouter);
 
 //app-wide custom error handler
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {

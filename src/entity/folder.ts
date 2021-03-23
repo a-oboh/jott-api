@@ -19,10 +19,10 @@ export class Folder extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("varchar", {length: 255})
+  @Column("varchar", { length: 255 })
   name: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true, length: 500 })
   description: string;
 
   @OneToMany(() => Note, (note) => note.folder) notes: Note[];

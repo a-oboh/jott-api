@@ -4,15 +4,15 @@ import { HttpError } from "helpers/httpError";
 import { getRepository, Repository } from "typeorm";
 
 export class FolderService {
-  // constructor() {
-  //   this.init();
+  // constructor(folderRepo: Repository<Folder>) {
+  //   this.folderRepo = folderRepo;
   // }
 
-  private folderRepo: Repository<Folder>;
+  // private folderRepo: Repository<Folder>;
 
   private findFolderById = async (id: string) => {
     try {
-      const folderRepo = await getRepository(Folder);
+      const folderRepo =  getRepository(Folder);
       const folder = await folderRepo.findOne(id);
 
       if (!folder) {
@@ -31,10 +31,10 @@ export class FolderService {
     return folder;
   };
 
-  getFolderByOwner = async (owner: User): Promise<Folder[]> => {
+  getFoldersByOwner = async (owner: User): Promise<Folder[]> => {
     try {
       const folderRepo = await getRepository(Folder);
-      const folders = folderRepo.find({ owner });
+      const folders = await folderRepo.find({ owner });
 
       if (!folders) {
         throw new HttpError(`note for user ${owner.id} not found`, 404);
@@ -51,7 +51,7 @@ export class FolderService {
       const folderRepo = await getRepository(Folder);
       const folders = folderRepo.create(data);
 
-      const newFolder = this.folderRepo.save(folders);
+      const newFolder = await folderRepo.save(folders);
 
       return (newFolder as unknown) as Folder;
     } catch (e) {
@@ -62,7 +62,7 @@ export class FolderService {
   updateFolder = async (data: Folder): Promise<Folder> => {
     try {
       const folderRepo = await getRepository(Folder);
-      const newFolder = folderRepo.save(data);
+      const newFolder = await folderRepo.save(data);
 
       return (newFolder as unknown) as Folder;
     } catch (e) {
@@ -70,15 +70,15 @@ export class FolderService {
     }
   };
 
-  deleteNote = (id: string) => {
-    // const noteToRemove = await this.findNoteById(id);
+  deleteFolder = (id: string) => {
+    // const noteToRemove = await this.findFolderById(id);
     const folderRepo = getRepository(Folder);
 
     return folderRepo.softDelete(id);
   };
 
-  restoreNote = (id: string) => {
-    // const noteToRestore = await this.findNoteById(id);
+  restoreFolder = (id: string) => {
+    // const noteToRestore = await this.findFolderById(id);
     const folderRepo = getRepository(Folder);
 
     return folderRepo.restore(id);
