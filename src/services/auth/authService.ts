@@ -1,7 +1,7 @@
 import { UserService } from "../userService";
 import jwt from "jsonwebtoken";
 import { User } from "../../entity/user";
-import { HttpError } from "../../helpers/httpError";
+import { HttpError } from "../../util/httpError";
 import * as bcrypt from "bcrypt";
 
 class Payload {

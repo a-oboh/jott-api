@@ -1,9 +1,9 @@
-import { HttpError } from "helpers/httpError";
+import { HttpError } from "util/httpError";
 import redis from "redis";
 import { currentConfig as config } from "../../config/index";
 import { promisify } from "util";
-import { logger } from "helpers/logger";
-// import { redisClient } from "../../app";
+import { logger } from "util/logger";
+// import { redisClient } from "../../index";
 
 export class RedisService {
   REDIS_PORT = config.app.redisPort || 6379;

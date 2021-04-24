@@ -1,6 +1,6 @@
 import { Folder } from "entity/folder";
 import { User } from "entity/user";
-import { HttpError } from "helpers/httpError";
+import { HttpError } from "util/httpError";
 import { getRepository, Repository } from "typeorm";
 
 export class FolderService {

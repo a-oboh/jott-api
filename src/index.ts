@@ -1,4 +1,5 @@
 import express, {
+  Application,
   ErrorRequestHandler,
   NextFunction,
   Request,
@@ -11,22 +12,32 @@ import { promisifyAll } from "bluebird";
 
 import { currentConfig as config } from "./config/index";
 import { createConnection } from "typeorm";
-import { handleError, HttpError } from "./helpers/httpError";
+import { handleError, HttpError } from "./util/httpError";
 
-import { authRouter, noteRouter, folderRouter } from "../src/routes/index";
-import { expressLogger, logger } from "helpers/logger";
+import { authRouter, noteRouter, folderRouter } from "./routes/routeIndex";
+import { expressLogger, logger } from "util/logger";
+import { createTypeOrmConnection } from "util/typeOrmConnection";
 
 dotenv.config();
 
-const app = express();
+const app: Application = express();
 const PORT = config.app.port || 8030;
 const REDIS_PORT = config.app.redisPort || 6379;
 
 async function connectDb() {
   try {
-    await createConnection().then(async (conn) => await conn.runMigrations());
-    // await conn.runMigrations();
-    logger.debug("Database connected");
+    if (process.env.NODE_ENV == "development") {
+      await createTypeOrmConnection().then(
+        async (conn) => await conn.runMigrations()
+      );
+      logger.debug("Database connected");
+    }
+
+    if (process.env.NODE_ENV == "test") {
+      await createTypeOrmConnection();
+      // .then(async (conn) => await conn.runMigrations());
+      logger.debug("Test database connected");
+    }
   } catch (error) {
     logger.error(error);
   }
@@ -61,9 +72,11 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   handleError(error, res);
 });
 
-app.listen(PORT, () => {
-  logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`)
-  // console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+    // console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+  });
+}
 
 export { redisClient, app };

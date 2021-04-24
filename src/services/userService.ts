@@ -1,6 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import { User } from "../entity/user";
-import { HttpError } from "../helpers/httpError";
+import { HttpError } from "../util/httpError";
 
 export class UserService {
   constructor() {

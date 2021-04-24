@@ -2,11 +2,11 @@
 import { Folder } from "entity/folder";
 import { Note } from "entity/note";
 import { NextFunction, Response, Request } from "express";
-import { cacheRequest } from "helpers/cache";
-import { HttpError } from "helpers/httpError";
-import { logger } from "helpers/logger";
-import paginate from "helpers/paginate";
-import { bodyEmpty } from "helpers/util";
+import { cacheRequest } from "util/cache";
+import { HttpError } from "util/httpError";
+import { logger } from "util/logger";
+import paginate from "util/paginate";
+import { bodyEmpty } from "util/util";
 import { FolderService } from "services/folders/folderService";
 import { NoteService } from "services/notes/noteService";
 import { RedisService } from "services/redis/redisService";

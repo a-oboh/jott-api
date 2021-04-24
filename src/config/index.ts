@@ -1,6 +1,6 @@
 import _ from "lodash";
 import defaultConfig from "./default";
-import testConfig from "./test";
+import testConfig from "./testConfig";
 import prodConfig from "./prod";
 
 interface conf {

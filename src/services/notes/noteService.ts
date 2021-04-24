@@ -1,7 +1,7 @@
 import { User } from "entity/user";
 import { getRepository, Repository } from "typeorm";
 import { Note } from "../../entity/note";
-import { HttpError } from "../../helpers/httpError";
+import { HttpError } from "../../util/httpError";
 
 export class NoteService {
   // constructor(noteRepo: Repository<Note>) {
