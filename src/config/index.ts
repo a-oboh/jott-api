@@ -29,6 +29,6 @@ function getConfig(): conf {
   }
 }
 
-let currentConfig: conf = getConfig();
+const currentConfig: conf = getConfig();
 
 export { currentConfig, conf };

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth/authService";
 import { HttpError } from "../util/httpError";
-import { User } from "entity/user";
+import { User } from "../entity/user";
 
 export class AuthController {
   //   private userRepository = getRepository(User);
@@ -22,7 +22,7 @@ export class AuthController {
       });
     }
 
-    let newUser = new User();
+    const newUser = new User();
 
     newUser.email = req.body.email;
     newUser.firstName = req.body.firstName;
@@ -30,7 +30,7 @@ export class AuthController {
     newUser.password = req.body.password;
 
     try {
-      let authService = new AuthService();
+      const authService = new AuthService();
       const user = await authService.register(newUser);
 
       return res.send({
@@ -63,7 +63,7 @@ export class AuthController {
     const { email, password } = req.body;
 
     try {
-      let authService = new AuthService();
+      const authService = new AuthService();
       const user = await authService.login(email, password);
 
       return res.send({

@@ -1,6 +1,6 @@
 //IOC container could be used for dependency injection (DI)
 
-import { User } from "entity/user";
+import { User } from "../entity/user";
 import { Repository } from "typeorm";
 import { UserService } from "./userService";
 

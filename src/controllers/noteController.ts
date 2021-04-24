@@ -4,9 +4,9 @@ import { HttpError } from "../util/httpError";
 import { UserService } from "../services/userService";
 import { NoteService } from "../services/notes/noteService";
 import { RedisService } from "../services/redis/redisService";
-import { cacheRequest } from "util/cache";
-import paginate from "util/paginate";
-import { logger } from "util/logger";
+import { cacheRequest } from "../util/cache";
+import paginate from "../util/paginate";
+import { logger } from "../util/logger";
 
 export class NoteController {
   userService: UserService = new UserService();

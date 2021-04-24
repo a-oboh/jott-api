@@ -1,4 +1,4 @@
-let testConfig = {
+const testConfig = {
  
 };
 

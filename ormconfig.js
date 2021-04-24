@@ -3,34 +3,32 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+const rootDir = process.env.NODE_ENV === "development" ? "src" : "dist";
+
 const connectionConfig = {
   type: "mysql",
   host: process.env.MYSQL_HOST,
   port: process.env.MYSQL_PORT,
   username: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASS,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 };
 
 const devConfig = {
   ...connectionConfig,
-  name: "development",
-  database: process.env.DB,
-  // synchronize: true,
-  logging: true,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migrations/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  synchronize: false,
+  logging: false,
+  entities: [__dirname + "/entity/**/*{.ts,.js}"],
+  migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   cli: {
-    entitiesDir: "src/entity",
-    migrationsDir: "src/migrations",
-    subscribersDir: "src/subscriber",
+    entitiesDir: __dirname + "/entity",
+    migrationsDir: __dirname + "migrations",
   },
 };
 
 const prodConfig = {
   ...connectionConfig,
-  name: "production",
-  database: process.env.DB,
+  synchronize: false,
   logging: false,
   entities: ["dist/entity/**/*.js"],
   migrations: ["dist/migrations/**/*.js"],

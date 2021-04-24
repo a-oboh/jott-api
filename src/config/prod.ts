@@ -1,4 +1,4 @@
-let prodConfig = {
+const prodConfig = {
     // log: "debug",
   };
   

@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
@@ -25,7 +25,7 @@
     "express-pino-logger": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
     "node-dependency-injection": "^2.6.11",
     "pino": "^6.11.1",
     "pino-colada": "^2.1.0",
@@ -35,7 +35,7 @@
     "typeorm": "^0.2.28"
   },
   "devDependencies": {
-    "@types/bcrypt": "^3.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/bluebird": "^3.5.33",
     "@types/body-parser": "^1.19.0",
     "@types/config": "0.0.36",
