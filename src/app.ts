@@ -13,14 +13,15 @@ import { currentConfig as config } from "./config/index";
 import { createConnection } from "typeorm";
 import { handleError, HttpError } from "./helpers/httpError";
 
-import { authRouter, noteRouter, folderRouter } from "../src/routes/index";
-import { expressLogger, logger } from "helpers/logger";
+import { authRouter, noteRouter, folderRouter } from "./routes/index";
+import { expressLogger, logger } from "./helpers/logger";
 
 dotenv.config();
 
 const app = express();
 const PORT = config.app.port || 8030;
 const REDIS_PORT = config.app.redisPort || 6379;
+const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 
 async function connectDb() {
   try {
@@ -34,7 +35,7 @@ async function connectDb() {
 
 promisifyAll(redis);
 
-const redisClient = redis.createClient({ port: REDIS_PORT });
+const redisClient = redis.createClient({ host: REDIS_HOST, port: REDIS_PORT });
 
 connectDb();
 
@@ -45,7 +46,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) =>
-  res.send("<h1>q-note v1.0 🤙🏽 🤙🏽</h1>")
+  res.send("<h1>jott API v1.0 🤙🏽 🤙🏽</h1>")
 );
 
 app.get("/api/v1/error", (req, res) => {
@@ -62,7 +63,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`)
+  logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
   // console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
 

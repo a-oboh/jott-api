@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { requireAuth } from "middleware/authMiddleware";
-import checkIdempotentKey from "middleware/idempotencyMiddleware";
+import { requireAuth } from "../middleware/authMiddleware";
+import checkIdempotentKey from "../middleware/idempotencyMiddleware";
 import { NoteController } from "../controllers/noteController";
 
 export const noteRouter = Router();

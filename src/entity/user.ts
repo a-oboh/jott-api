@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Note } from "./note";
 import { Folder } from "./folder";
 

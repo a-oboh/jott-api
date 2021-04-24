@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpError } from "helpers/httpError";
+import { HttpError } from "../helpers/httpError";
 
 const checkIdempotentKey = (
   req: Request,

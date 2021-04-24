@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Folder } from "entity/folder";
-import { Note } from "entity/note";
+import { Folder } from "../entity/folder";
+import { Note } from "../entity/note";
 import { NextFunction, Response, Request } from "express";
-import { cacheRequest } from "helpers/cache";
-import { HttpError } from "helpers/httpError";
-import { logger } from "helpers/logger";
-import paginate from "helpers/paginate";
-import { bodyEmpty } from "helpers/util";
-import { FolderService } from "services/folders/folderService";
-import { NoteService } from "services/notes/noteService";
-import { RedisService } from "services/redis/redisService";
-import { UserService } from "services/userService";
+import { cacheRequest } from "../helpers/cache";
+import { HttpError } from "../helpers/httpError";
+import { logger } from "../helpers/logger";
+import {paginate} from "../helpers/paginate";
+import { bodyEmpty } from "../helpers/util";
+import { FolderService } from "../services/folders/folderService";
+import { NoteService } from "../services/notes/noteService";
+import { RedisService } from "../services/redis/redisService";
+import { UserService } from "../services/userService";
 
 export class FolderController {
   userService: UserService = new UserService();

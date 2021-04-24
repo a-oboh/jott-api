@@ -1,4 +1,4 @@
-import { RedisService } from "services/redis/redisService";
+import { RedisService } from "../services/redis/redisService";
 
 const redisService = new RedisService();
 

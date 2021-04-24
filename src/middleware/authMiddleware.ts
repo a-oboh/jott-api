@@ -1,4 +1,4 @@
-import { User } from "entity/user";
+import { User } from "../entity/user";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 

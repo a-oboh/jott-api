@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const dotenv = require("dotenv");
 
 dotenv.config();
+
+const rootDir = process.env.NODE_ENV === "development" ? "src" : "dist";
 
 const connectionConfig = {
   name: "default",
@@ -8,27 +11,25 @@ const connectionConfig = {
   host: process.env.MYSQL_HOST,
   port: process.env.MYSQL_PORT,
   username: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASS,
-  database: process.env.DB,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 };
 
 const devConfig = {
   ...connectionConfig,
-  synchronize: true,
+  synchronize: false,
   logging: false,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migrations/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  entities: [__dirname + "/entity/**/*{.ts,.js}"],
+  migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   cli: {
-    entitiesDir: "src/entity",
-    migrationsDir: "src/migrations",
-    subscribersDir: "src/subscriber",
+    entitiesDir: __dirname + "/entity",
+    migrationsDir: __dirname + "migrations",
   },
 };
 
 const prodConfig = {
   ...connectionConfig,
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ["dist/entity/**/*.js"],
   migrations: ["dist/migrations/**/*.js"],
@@ -42,7 +43,7 @@ const prodConfig = {
 
 getConfig = () => {
   switch (process.env.NODE_ENV) {
-    case "dev":
+    case "development":
       return devConfig;
     case "production":
       return prodConfig;

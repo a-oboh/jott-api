@@ -13,3 +13,5 @@
 - Run build with `npm run build`
   
 - To run DB migrations: `npx ts-node ./node_modules/.bin/typeorm migration:generate -n MigrationName`
+
+- Run mysql in container docker exec -ti jott-api_db_1 mysql -uusername -ppassword

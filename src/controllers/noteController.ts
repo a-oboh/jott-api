@@ -4,8 +4,8 @@ import { HttpError } from "../helpers/httpError";
 import { UserService } from "../services/userService";
 import { NoteService } from "../services/notes/noteService";
 import { RedisService } from "../services/redis/redisService";
-import { cacheRequest } from "helpers/cache";
-import paginate from "helpers/paginate";
+import { cacheRequest } from "../helpers/cache";
+import {paginate} from "../helpers/paginate";
 import { logger } from "helpers/logger";
 
 export class NoteController {

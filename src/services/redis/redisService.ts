@@ -1,14 +1,15 @@
-import { HttpError } from "helpers/httpError";
+import { HttpError } from "../../helpers/httpError";
 import redis from "redis";
 import { currentConfig as config } from "../../config/index";
 import { promisify } from "util";
-import { logger } from "helpers/logger";
+import { logger } from "../../helpers/logger";
 // import { redisClient } from "../../app";
 
 export class RedisService {
   REDIS_PORT = config.app.redisPort || 6379;
+  REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 
-  redisClient = redis.createClient({ port: this.REDIS_PORT });
+  redisClient = redis.createClient({ host: this.REDIS_HOST, port: this.REDIS_PORT });
 
   private setAsync = promisify(this.redisClient.set).bind(this.redisClient);
   private setExAsync = promisify(this.redisClient.setex).bind(this.redisClient);
