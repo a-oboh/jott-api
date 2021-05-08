@@ -43,4 +43,4 @@ ENV NODE_ENV=test
 
 RUN npm install
 
-RUN npm run test
+# RUN npm run test
