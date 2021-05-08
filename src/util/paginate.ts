@@ -1,6 +1,6 @@
 import { HttpError } from "./httpError";
 
-export  function paginate(data: [], page: string, limit: string) {
+export  default function paginate(data: [], page: string, limit: string) {
   try {
     const pageNum = parseInt(page.toString());
     const limitNum = parseInt(limit.toString());
