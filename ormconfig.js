@@ -16,44 +16,44 @@ const connectionConfig = {
 
 const devConfig = {
   ...connectionConfig,
+  name: "development",
   synchronize: false,
   logging: false,
   entities: [__dirname + "/entity/**/*{.ts,.js}"],
   migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   cli: {
     entitiesDir: __dirname + "/entity",
-    migrationsDir: __dirname + "migrations",
+    migrationsDir: __dirname + "/migrations",
   },
 };
 
 const prodConfig = {
   ...connectionConfig,
   synchronize: false,
+  name: "production",
   logging: false,
-  entities: ["dist/entity/**/*.js"],
-  migrations: ["dist/migrations/**/*.js"],
-  subscribers: ["dist/subscriber/**/*.js"],
+  entities: ["src/entity/**/*{.ts,.js}", "dist/entity/**/*{.ts,.js}"],
+  migrations: ["src/migrations/**/*{.ts,.js}"],
   cli: {
-    entitiesDir: "dist/entity",
-    migrationsDir: "dist/migrations",
-    subscribersDir: "dist/subscriber",
+    entitiesDir: "src/entity",
+    migrationsDir: "src/migrations",
   },
 };
 
 const testConfig = {
   ...connectionConfig,
   name: "test",
+  host: process.env.MYSQL_HOST,
   database: process.env.TEST_DB,
   synchronize: true,
   logging: false,
   dropSchema: true,
-  entities: ["src/entity/**/*.ts"],
-  migrations: ["src/migrations/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  entities: ["src/entity/**/*{.ts,.js}", "dist/entity/**/*{.ts,.js}"],
+  // migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
+  // migrationsRun: true,
   cli: {
-    entitiesDir: "src/entity",
-    migrationsDir: "src/migrations",
-    subscribersDir: "src/subscriber",
+    entitiesDir:"src/entity",
+    // migrationsDir: __dirname + "/migrations",
   },
 };
 
@@ -71,7 +71,5 @@ getConfig = () => {
 };
 
 const config = getConfig();
-
-// console.log(config);
 
 module.exports = config;
