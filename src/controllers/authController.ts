@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth/authService";
 import { HttpError } from "../util/httpError";
 import { User } from "../entity/user";
+import { bodyEmpty } from "../util/util";
 
 export class AuthController {
   //   private userRepository = getRepository(User);
@@ -53,11 +54,11 @@ export class AuthController {
   }
 
   async login(req: Request, res: Response) {
-    if (!req.body) {
-        return res.status(400).send({
-          status: "error",
-          message: "request body cannot be empty",
-        });
+    if (bodyEmpty(req)) {
+      return res.status(400).send({
+        status: "error",
+        message: "request body cannot be empty",
+      });
     }
 
     const { email, password } = req.body;
