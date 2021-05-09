@@ -9,7 +9,7 @@
     "test-server": "NODE_ENV=test ts-node --files -r tsconfig-paths/register src/index.ts",
     "build": "tsc --project ./",
     "postinstall": "node-config-ts",
-    "test": "NODE_ENV=test PORT=20 jest",
+    "test": "NODE_ENV=test PORT=20 jest --force-exit",
     "test-coverage": "jest --coverage",
     "lint": "eslint . --ext .ts",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts"
