@@ -4,45 +4,55 @@ import {
   closeConnection,
   createTestUsers,
   createTypeOrmConnection,
-} from "util/typeOrmConnection";
-import { RouteEnum } from "util/routeEnum";
-import { createConnection } from "typeorm";
+  cleanDb,
+} from "../../util/typeOrmConnection";
+import { RouteEnum } from "../../util/routeEnum";
+import { createConnection, getConnectionOptions } from "typeorm";
 
 describe("note service test suite", () => {
   beforeAll(async () => {
-    return createConnection({
-      type: "mysql",
-      host: "127.0.0.1",
-      port: "3306",
-      username: "root",
-      password: "",
-      dropSchema: true,
-      
-     synchronize: true,
-     logging: false
-    });
-    // await createTypeOrmConnection();
-    await createTestUsers();
+    let retries = 5;
+
+    while (retries) {
+      try {
+        // await createTypeOrmConnection()
+        const connOptions = await getConnectionOptions(process.env.NODE_ENV);
+        await createConnection({ ...connOptions, name: "default" }).then(
+          async () => {
+            await createTestUsers();
+          }
+        );
+        break;
+      } catch (e) {
+        console.log(e);
+      }
+
+      retries--;
+    }
   });
 
   afterAll(async () => {
+    await cleanDb();
     await closeConnection();
   });
 
   it("should create a new note [POST]", async () => {
-    const user = await request(app)
+    await request(app)
       .post(`${RouteEnum.AuthRoute}/login`)
-      .send({ email: "user@test.com", password: "secret" });
-
-    const result = await request(app)
-      .post(`${RouteEnum.NoteRoute}/create-note`)
-      .set("Authorization", "bearer " + user.body.token)
-      .set({ "x-idempotent-key": "a1" })
-      .send({
-        title: "test note",
-        content: "# h1 Heading 5! 8-)",
+      .send({ email: "user@test.com", password: "secret" })
+      .then(async (login) => {
+        await request(app)
+          .post(`${RouteEnum.NoteRoute}/create-note`)
+          .set("Authorization", "Bearer " + login.body.data.access_token)
+          .set({ "x-idempotent-key": "a1" })
+          .send({
+            title: "test note",
+            content: "# h1 Heading 5! 8-)",
+          })
+          .then((result) => {
+            expect([201, 304]).toContain(result.status);
+            // expect(result.status).toBe(201);
+          });
       });
-
-    expect(result.status).toBe(200);
   });
 });
