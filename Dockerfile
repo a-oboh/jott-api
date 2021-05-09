@@ -1,6 +1,5 @@
 FROM node:12 as base
 
-# Create app directory
 WORKDIR /usr/app
 
 # Install app dependencies
@@ -9,10 +8,6 @@ WORKDIR /usr/app
 COPY package*.json ./
 
 RUN npm install
-# If you are building your code for production
-# RUN npm install --only=production
-
-# Bundle app source
 COPY . /usr/app
 
 # for typescript
@@ -27,16 +22,6 @@ COPY . /usr/app
 
 # CMD [ "npm", "run", "start" ]
 
-FROM base as production
-
-ENV NODE_ENV=production
-
-RUN npm install --production
-
-RUN npm run build
-
-
-
 FROM base as test
 
 ENV NODE_ENV=test
@@ -44,3 +29,11 @@ ENV NODE_ENV=test
 RUN npm install
 
 # RUN npm run test
+
+FROM base as production
+
+ENV NODE_ENV=production
+
+RUN npm install --production
+
+RUN npm run build

@@ -3,8 +3,11 @@ services:
   app:
     build:
       target: test
-    ports: 
+    image: jott-api-test
+    ports:
     - 20:20
+    depends_on:
+    - db
     command: npm run test
 
   db:
