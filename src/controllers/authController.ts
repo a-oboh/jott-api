@@ -14,7 +14,7 @@ export class AuthController {
   //     this.authService = new AuthService();
   //   }
 
-  async register(req: Request, res: Response) {
+  async register(req: Request, res: Response): Promise<Response> {
     if (!req.body) {
       return res.status(400).json({
         status: "error",
@@ -53,7 +53,7 @@ export class AuthController {
     }
   }
 
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response): Promise<Response> {
     if (bodyEmpty(req)) {
       return res.status(400).send({
         status: "error",
