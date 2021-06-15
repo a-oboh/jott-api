@@ -1,11 +1,11 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import { logger } from "./logger";
 
 class HttpError extends Error {
   statusCode: number;
   message: string;
 
-  constructor(message: string, statusCode = 500, stack = null) {
+  constructor(message: string, statusCode = 500) {
     super(message);
 
     this.statusCode = statusCode;
@@ -22,17 +22,29 @@ class HttpError extends Error {
   }
 }
 
-const handleError = (err: any, res: Response) => {
+class InternalServerError extends HttpError {
+  constructor(message: string) {
+    super(message, 500);
+  }
+}
+
+class BadRequest extends HttpError {
+  constructor(message: string) {
+    super(message, 400);
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const handleError = (err: any, res: Response, next: NextFunction) => {
   const { statusCode = 500, message } = err;
 
-  // logger.error(message);
   logger.error(err);
 
-  res.status(statusCode).json({
+ return next(res.status(statusCode).json({
     status: "error",
     statusCode,
     message,
-  });
+  }));
 };
 
-export { HttpError, handleError };
+export { HttpError, BadRequest, InternalServerError, handleError };

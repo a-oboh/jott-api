@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -28,8 +29,18 @@ export class User {
   @Column()
   lastName: string;
 
+  @Column({nullable: true})
+  photoUrl: string;
+
   @Column()
   password: string;
+
+  @Index()
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  firebaseUuid: string;
 
   @Column({ default: "" })
   confirmationToken: string;
@@ -42,7 +53,7 @@ export class User {
   @OneToMany(() => Folder, (folder) => folder.owner) folders: Folder[];
 
   @BeforeInsert()
-  async hashPassword() {
+  async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 10);
   }
 

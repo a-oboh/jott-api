@@ -1,15 +1,18 @@
 import { Router } from "express";
+import { AuthService } from "services/auth/authService";
 import { AuthController } from "../controllers/authController";
 
 export const authRouter = Router();
 
-const authCtrl = new AuthController();
+const authService = new AuthService()
+
+const authCtrl = new AuthController(authService);
 
 authRouter.post("/register", authCtrl.register);
 
 authRouter.post("/login", authCtrl.login);
 
-// authRouter.get("/get/:id", authCtrl.getOne);
+authRouter.post("/firebase-user", authCtrl.firebaseGetUser);
 
 // authRouter.get("/all", authCtrl.getAll);
 

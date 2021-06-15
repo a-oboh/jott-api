@@ -7,7 +7,8 @@ const defaultConfig: conf = {
   app: {
     port: process.env.PORT,
     redisPort: parseInt(process.env.REDIS_PORT as string),
-    redisHost: (process.env.REDIS_HOST as string),
+    redisHost: process.env.REDIS_HOST as string,
+    jwtLife: process.env.JWT_LIFE,
   },
   db: {
     HOST: process.env.MYSQL_HOST,

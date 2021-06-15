@@ -8,6 +8,7 @@ interface conf {
     port?: string;
     redisPort?: number;
     redisHost?: string;
+    jwtLife?: string | number;
   };
   db: {
     HOST?: string;

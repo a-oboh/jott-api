@@ -16,7 +16,7 @@ describe("note service test suite", () => {
     while (retries) {
       try {
         // await createTypeOrmConnection()
-        const connOptions = await getConnectionOptions(process.env.NODE_ENV);
+        const connOptions = await getConnectionOptions("test");
         await createConnection({ ...connOptions, name: "default" }).then(
           async () => {
             await createTestUsers();

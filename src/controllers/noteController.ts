@@ -7,6 +7,7 @@ import { RedisService } from "../services/redis/redisService";
 import { cacheRequest } from "../util/cache";
 import paginate from "../util/paginate";
 import { logger } from "../util/logger";
+import { bodyEmpty } from "util/util";
 
 export class NoteController {
   userService: UserService = new UserService();
@@ -76,7 +77,7 @@ export class NoteController {
   };
 
   createNote = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.body) {
+    if (bodyEmpty(req)) {
       return next(new HttpError("request body cannot be empty", 400));
     }
 
@@ -137,7 +138,7 @@ export class NoteController {
   };
 
   updateNote = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.body) {
+    if (bodyEmpty(req)) {
       return next(new HttpError("request body cannot be empty", 400));
     }
 

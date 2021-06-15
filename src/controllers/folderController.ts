@@ -90,7 +90,7 @@ export class FolderController {
 
   createFolder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (!req.body || bodyEmpty(req)) {
+      if (bodyEmpty(req) || bodyEmpty(req)) {
         return next(new HttpError("request body cannot be empty", 400));
       }
 
@@ -163,7 +163,7 @@ export class FolderController {
   };
 
   updateFolder = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.body || bodyEmpty(req)) {
+    if (bodyEmpty(req) || bodyEmpty(req)) {
       return next(new HttpError("request body cannot be empty", 400));
     }
 
