@@ -31,7 +31,7 @@ export class AuthService {
 
   async register(data: User): Promise<any> {
     try {
-      data.hashPassword(data.password);
+      await data.hashPassword(data.password);
       const user = await this.userService.createUser(data);
 
       user.password = undefined;

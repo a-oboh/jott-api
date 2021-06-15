@@ -17,11 +17,7 @@ export class AuthController {
     next: NextFunction
   ): Promise<any> {
     if (bodyEmpty(req)) {
-      return res.status(400).json({
-        status: "error",
-        statusCode: 400,
-        message: "body empty",
-      });
+      return next(new BadRequest("body cannot be empty"));
     }
 
     const newUser = new User();
@@ -34,8 +30,7 @@ export class AuthController {
     newUser.firebaseUuid = null;
 
     try {
-      const authService = new AuthService();
-      const user = await authService.register(newUser);
+      const user = await this.authService.register(newUser);
 
       return res.send({
         status: "success",
@@ -53,17 +48,13 @@ export class AuthController {
     next: NextFunction
   ): Promise<Response | any> {
     if (bodyEmpty(req)) {
-      return res.status(400).send({
-        status: "error",
-        message: "request body cannot be empty",
-      });
+      return next(new BadRequest("body cannot be empty"));
     }
 
     const { email, password } = req.body;
 
     try {
-      const authService = new AuthService();
-      const user = await authService.login(email, password);
+      const user = await this.authService.login(email, password);
 
       return res.send({
         status: "success",
@@ -93,7 +84,6 @@ export class AuthController {
     newUser.photoUrl = req.body.photoUrl;
 
     try {
-      // const authService = new AuthService();
       const user = await this.authService.firebaseRegister(newUser);
 
       return res.send({
@@ -118,7 +108,6 @@ export class AuthController {
     const firebaseUuid = req.body.firebaseUuid;
 
     try {
-      // const authService = new AuthService();
       const user = await this.authService.getUser(firebaseUuid);
 
       return res.send({
