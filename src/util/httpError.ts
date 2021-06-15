@@ -8,17 +8,13 @@ class HttpError extends Error {
   constructor(message: string, statusCode = 500) {
     super(message);
 
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, HttpError.prototype);
+
     this.statusCode = statusCode;
     this.message = message;
 
-    Error.captureStackTrace(this, this.constructor);
-
-    // this.stack = stack;
-
-    // Error.captureStackTrace(this);
-
-    // // Set the prototype explicitly.
-    // Object.setPrototypeOf(this, HttpError.prototype);
+    Error.captureStackTrace(this);
   }
 }
 
@@ -34,9 +30,15 @@ class BadRequest extends HttpError {
   }
 }
 
+class NotFoundError extends HttpError {
+  constructor(message: string) {
+    super(message, 404);
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const handleError = (err: any, res: Response, next: NextFunction) => {
-  const { statusCode = 500, message } = err;
+  const { statusCode = 500, message, stack } = err;
 
   logger.error(err);
 
@@ -47,4 +49,4 @@ const handleError = (err: any, res: Response, next: NextFunction) => {
   }));
 };
 
-export { HttpError, BadRequest, InternalServerError, handleError };
+export { HttpError, BadRequest, InternalServerError, NotFoundError, handleError };

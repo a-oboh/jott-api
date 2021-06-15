@@ -32,10 +32,9 @@ export class User {
   @Column({nullable: true})
   photoUrl: string;
 
-  @Column()
+  @Column({nullable: true})
   password: string;
 
-  @Index()
   @Column({
     unique: true,
     nullable: true,
@@ -52,9 +51,9 @@ export class User {
 
   @OneToMany(() => Folder, (folder) => folder.owner) folders: Folder[];
 
-  @BeforeInsert()
-  async hashPassword(): Promise<void> {
-    this.password = await bcrypt.hash(this.password, 10);
+  // @BeforeInsert()
+  async hashPassword(password: string): Promise<void> {
+    this.password = await bcrypt.hash(password, 10);
   }
 
   async comparePassword(attempt: string): Promise<boolean> {

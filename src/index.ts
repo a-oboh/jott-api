@@ -1,15 +1,10 @@
-import express, {
-  Application,
-  NextFunction,
-  Request,
-  Response,
-} from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import redis from "redis";
 import { promisifyAll } from "bluebird";
 
 import { currentConfig as config } from "./config/index";
-import { handleError } from "./util/httpError";
+import { handleError, NotFoundError } from "./util/httpError";
 
 import { authRouter, noteRouter, folderRouter } from "./routes/routeIndex";
 import { logger } from "./util/logger";
@@ -67,10 +62,6 @@ app.use("/api/v1/folder", folderRouter);
 
 //app-wide custom error handler
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) {
-    return next(error);
-  }
-
   handleError(error, res, next);
 });
 

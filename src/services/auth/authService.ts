@@ -31,6 +31,7 @@ export class AuthService {
 
   async register(data: User): Promise<any> {
     try {
+      data.hashPassword(data.password);
       const user = await this.userService.createUser(data);
 
       user.password = undefined;
@@ -106,7 +107,7 @@ export class AuthService {
 
       return { user, access_token: token };
     } catch (err) {
-      if ((err.message as string).includes("ER_DUP_ENTRY")) {
+      if ((err.message as string).includes("Duplicate")) {
         throw new HttpError(
           `user with email ${data.email} already exists`,
           400

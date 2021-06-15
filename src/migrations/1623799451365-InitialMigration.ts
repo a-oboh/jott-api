@@ -1,10 +1,10 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class InitialMigration1623358448892 implements MigrationInterface {
-    name = 'InitialMigration1623358448892'
+export class InitialMigration1623799451365 implements MigrationInterface {
+    name = 'InitialMigration1623799451365'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query("CREATE TABLE `users` (`id` varchar(36) NOT NULL, `email` varchar(255) NOT NULL, `firstName` varchar(255) NOT NULL, `lastName` varchar(255) NOT NULL, `password` varchar(255) NOT NULL, `confirmationToken` varchar(255) NOT NULL DEFAULT '', `resetCode` varchar(255) NOT NULL DEFAULT '', `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `deletedAt` datetime(6) NULL, UNIQUE INDEX `IDX_97672ac88f789774dd47f7c8be` (`email`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
+        await queryRunner.query("CREATE TABLE `users` (`id` varchar(36) NOT NULL, `email` varchar(255) NOT NULL, `firstName` varchar(255) NOT NULL, `lastName` varchar(255) NOT NULL, `photoUrl` varchar(255) NULL, `password` varchar(255) NULL, `firebaseUuid` varchar(255) NULL, `confirmationToken` varchar(255) NOT NULL DEFAULT '', `resetCode` varchar(255) NOT NULL DEFAULT '', `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `deletedAt` datetime(6) NULL, UNIQUE INDEX `IDX_97672ac88f789774dd47f7c8be` (`email`), UNIQUE INDEX `IDX_65b5dab3fb7160105cca17ab5a` (`firebaseUuid`), PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `notes` (`id` varchar(36) NOT NULL, `title` varchar(255) NOT NULL, `content` varchar(255) NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `deletedAt` datetime(6) NULL, `folderId` varchar(36) NULL, `ownerId` varchar(36) NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `folders` (`id` varchar(36) NOT NULL, `name` varchar(255) NOT NULL, `description` varchar(500) NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `deletedAt` datetime(6) NULL, `ownerId` varchar(36) NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
         await queryRunner.query("CREATE TABLE `notes_members_users` (`notesId` varchar(36) NOT NULL, `usersId` varchar(36) NOT NULL, INDEX `IDX_39315b708ace241b8eca16d353` (`notesId`), INDEX `IDX_429585248688da8ece09713112` (`usersId`), PRIMARY KEY (`notesId`, `usersId`)) ENGINE=InnoDB");
@@ -34,6 +34,7 @@ export class InitialMigration1623358448892 implements MigrationInterface {
         await queryRunner.query("DROP TABLE `notes_members_users`");
         await queryRunner.query("DROP TABLE `folders`");
         await queryRunner.query("DROP TABLE `notes`");
+        await queryRunner.query("DROP INDEX `IDX_65b5dab3fb7160105cca17ab5a` ON `users`");
         await queryRunner.query("DROP INDEX `IDX_97672ac88f789774dd47f7c8be` ON `users`");
         await queryRunner.query("DROP TABLE `users`");
     }

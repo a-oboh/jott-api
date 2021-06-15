@@ -1,20 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth/authService";
-import { BadRequest, HttpError } from "../util/httpError";
+import { BadRequest, handleError, HttpError } from "../util/httpError";
 import { User } from "../entity/user";
 import { bodyEmpty } from "../util/util";
 
 export class AuthController {
-  //   private userRepository = getRepository(User);
-
-  //   private userService: UserService = new UserService(this.userRepository);
   private authService: AuthService;
 
   constructor(authService: AuthService) {
     this.authService = authService;
   }
 
-  async register(req: Request, res: Response, next: NextFunction): Promise<any> {
+  async register(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     if (bodyEmpty(req)) {
       return res.status(400).json({
         status: "error",
@@ -42,21 +43,15 @@ export class AuthController {
         data: user,
       });
     } catch (err) {
-      if (err instanceof HttpError) {
-        // return res.status(err.statusCode).send({
-        //   status: "error",
-        //   message: err.message || `error registering new user`,
-        // });
-        return next(err)
-      }
-      return res.status(500).send({
-        status: "error",
-        message: err.message || `error registering new user`,
-      });
+      return next(err);
     }
   }
 
-  async login(req: Request, res: Response): Promise<Response> {
+  async login(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | any> {
     if (bodyEmpty(req)) {
       return res.status(400).send({
         status: "error",
@@ -76,26 +71,17 @@ export class AuthController {
         data: user,
       });
     } catch (err) {
-      if (err instanceof HttpError) {
-        return res.status(err.statusCode).send({
-          status: "error",
-          message: err.message || `error while trying to login user`,
-        });
-      }
-      return res.status(500).send({
-        status: "error",
-        message: err.message || `error while trying to login user`,
-      });
+      return next(err);
     }
   }
 
-  async firebaseRegister(req: Request, res: Response): Promise<Response> {
+  async firebaseRegister(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | any> {
     if (bodyEmpty(req)) {
-      return res.status(400).json({
-        status: "error",
-        statusCode: 400,
-        message: "body empty",
-      });
+      return next(new BadRequest("body cannot be empty"));
     }
 
     const newUser = new User();
@@ -116,16 +102,7 @@ export class AuthController {
         data: user,
       });
     } catch (err) {
-      if (err instanceof HttpError) {
-        return res.status(err.statusCode).send({
-          status: "error",
-          message: err.message || `error registering new user`,
-        });
-      }
-      return res.status(500).send({
-        status: "error",
-        message: err.message || `error registering new user`,
-      });
+      return next(err);
     }
   }
 
@@ -133,10 +110,9 @@ export class AuthController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<any> {
+  ): Promise<Request | any> {
     if (bodyEmpty(req)) {
-      // return next(new BadRequest("body cannot be empty"));
-      return next(new HttpError("body cannot be empty", 400));
+      return next(new BadRequest("body cannot be empty"));
     }
 
     const firebaseUuid = req.body.firebaseUuid;
@@ -151,16 +127,7 @@ export class AuthController {
         data: user,
       });
     } catch (err) {
-      if (err instanceof HttpError) {
-        return res.status(err.statusCode).send({
-          status: "error",
-          message: err.message || `error getting user`,
-        });
-      }
-      return res.status(500).send({
-        status: "error",
-        message: err.message || `error getting user`,
-      });
+      return next(err);
     }
   }
 }
