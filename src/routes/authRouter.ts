@@ -12,12 +12,6 @@ authRouter.post("/register", authCtrl.register.bind(authCtrl));
 
 authRouter.post("/firebase-register", authCtrl.firebaseRegister.bind(authCtrl));
 
-authRouter.post("/login", authCtrl.login);
+authRouter.post("/login", authCtrl.login.bind(authCtrl));
 
 authRouter.post("/firebase-user", authCtrl.firebaseGetUser.bind(authCtrl));
-
-// authRouter.get("/all", authCtrl.getAll);
-
-// authRouter.put("/update/:id", authCtrl.updateUser);
-
-// authRouter.delete("/remove/:id", authCtrl.remove);

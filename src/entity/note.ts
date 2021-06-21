@@ -15,6 +15,12 @@ import { User } from "./user";
 
 @Entity("notes")
 export class Note {
+  constructor(id?: string, title?: string, content?: string) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+  }
+
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
