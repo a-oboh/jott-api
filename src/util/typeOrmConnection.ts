@@ -1,4 +1,5 @@
 import { User } from "entity/user";
+import { JwtService } from "services/auth/jwtService";
 import {
   createConnection,
   getConnection,
@@ -14,44 +15,50 @@ const createTypeOrmConnection = async (): Promise<Connection> => {
 };
 
 const connectTestDb = async (): Promise<void> => {
-  let retries = 1;
+  return new Promise<void>(async (resolve, reject) => {
+    let retries = 1;
 
-  while (retries) {
-    try {
-      // await createTypeOrmConnection()
-      const connOptions = await getConnectionOptions("test");
-      await createConnection({ ...connOptions, name: "default" }).then(
-        async () => {
-          await createTestUsers();
-        }
-      );
-    } catch (e) {
-      console.log(e);
+    while (retries) {
+      try {
+        // await createTypeOrmConnection()
+        const connOptions = await getConnectionOptions("test");
+        await createConnection({ ...connOptions, name: "default" });
+
+        resolve();
+        // break;
+      } catch (e) {
+        console.log(e);
+        reject(e);
+      }
+
+      retries--;
     }
-
-    retries--;
-  }
+  });
 };
 
 const closeConnection = async (): Promise<void> => {
   await getConnection().close();
 };
 
-const createTestUsers = async (): Promise<void> => {
-  const newUser = new User();
+const createTestUsers = async (): Promise<User> => {
+  return new Promise<User>(async (resolve, reject) => {
+    const newUser = new User();
 
-  newUser.email = "ayooo@test.com";
-  newUser.firstName = "Ayo";
-  newUser.lastName = "Balogun";
-  newUser.password = "secret";
+    newUser.email = "ayooo@test.com";
+    newUser.firstName = "Ayo";
+    newUser.lastName = "Balogun";
+    newUser.password = "secret";
 
-  const userRepository = getRepository(User);
+    const userRepository = getRepository(User);
 
-  const user = userRepository.create(newUser);
+    const user = userRepository.create(newUser);
 
-  await userRepository.save(user);
+    await userRepository.save(user);
 
-  console.log("saved user");
+    console.log("saved user");
+
+    resolve(user);
+  });
 };
 
 const cleanDb = async (): Promise<void> => {
