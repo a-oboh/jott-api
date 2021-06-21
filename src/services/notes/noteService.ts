@@ -23,8 +23,6 @@ export class NoteService {
   };
 
   getNoteById = async (id: string) => {
-    // let noteRepo = getRepository(Note);
-
     const note = await this.findNoteById(id);
 
     if (note) {
