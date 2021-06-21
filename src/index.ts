@@ -9,13 +9,9 @@ import { handleError, NotFoundError } from "./util/httpError";
 import { authRouter, noteRouter, folderRouter } from "./routes/routeIndex";
 import { logger } from "./util/logger";
 import { createTypeOrmConnection } from "./util/typeOrmConnection";
+import { app } from "app";
 
 dotenv.config();
-
-const app: Application = express();
-const PORT = config.app.port || 8030;
-const REDIS_PORT = config.app.redisPort || 6379;
-const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 
 async function connectDb() {
   try {
@@ -23,17 +19,18 @@ async function connectDb() {
       await createTypeOrmConnection().then(
         async (conn) => await conn.runMigrations()
       );
-      logger.debug("Database connected");
+      logger.debug("Dev database connected");
     } else if (process.env.NODE_ENV == "test") {
-      await createTypeOrmConnection().then(
-        async (conn) => await conn.runMigrations()
-      );
-      logger.debug("Test database connected");
+      // await createTypeOrmConnection()
+      // .then(
+      //   async (conn) => await conn.runMigrations()
+      // );
+      logger.info("Test database connected");
     } else {
       await createTypeOrmConnection().then(
         async (conn) => await conn.runMigrations()
       );
-      logger.debug("Production database connected");
+      logger.debug("Database connected");
     }
   } catch (error) {
     logger.error(error);
@@ -42,33 +39,8 @@ async function connectDb() {
 
 promisifyAll(redis);
 
-const redisClient = redis.createClient({ host: REDIS_HOST, port: REDIS_PORT });
+// const redisClient = redis.createClient({ host: REDIS_HOST, port: REDIS_PORT });
 
 connectDb();
 
-// parse requests of content-type: application/json
-app.use(express.json());
-
-// parse requests of content-type: application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/", (_req: Request, res: Response) =>
-  res.send("<h1>jott API v1.0 🤙🏽 🤙🏽</h1>")
-);
-
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/note", noteRouter);
-app.use("/api/v1/folder", folderRouter);
-
-//app-wide custom error handler
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  handleError(error, res, next);
-});
-
-if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    logger.info(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-  });
-}
-
-export { redisClient, app };
+app;
