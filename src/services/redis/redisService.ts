@@ -1,5 +1,6 @@
 import { HttpError } from "../../util/httpError";
 import redis from "redis";
+import redisMock from "redis-mock";
 import { currentConfig as config } from "../../config/index";
 import { promisify } from "util";
 import { logger } from "../../util/logger";
@@ -9,7 +10,10 @@ export class RedisService {
   REDIS_PORT = config.app.redisPort || 6379;
   REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 
-  redisClient = redis.createClient({ host: this.REDIS_HOST, port: this.REDIS_PORT });
+  redisClient =
+    process.env.NODE_ENV != "test"
+      ? redis.createClient({ host: this.REDIS_HOST, port: this.REDIS_PORT })
+      : redisMock.createClient();
 
   private setAsync = promisify(this.redisClient.set).bind(this.redisClient);
   private setExAsync = promisify(this.redisClient.setex).bind(this.redisClient);
@@ -43,5 +47,13 @@ export class RedisService {
     } catch (e) {
       throw new HttpError(e);
     }
+  }
+
+  close(): Promise<void> {
+    return new Promise((resolve) => {
+      this.redisClient.quit(() => {
+        resolve();
+      });
+    });
   }
 }

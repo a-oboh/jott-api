@@ -6,6 +6,7 @@ import prodConfig from "./prod";
 interface conf {
   app: {
     port?: string;
+    env?: string;
     redisPort?: number;
     redisHost?: string;
     jwtLife?: string | number;
